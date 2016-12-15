@@ -1,51 +1,49 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <conio.h>
-struct Person
+#include <iostream>
+using namespace std;
+struct Metro
 {
-	char NameSername[64];
-	char date[16];
-	char prof[32];
-	int numline;
+	char MetroSt[60];
+	char MetroLine[60];
+	unsigned int NumMetLine;
+	Metro *pNext;
 };
-
-struct List
-{
-	Sotr sotr;
-	List *pNext;
-};
-void addFirst(List *& pF, 
-	List* p)
+void addFirst(Metro *& pF, Metro* p)
 {
 	p->pNext = pF;
 	pF = p;
 }
-List * delFirst(List *&pF) 
+
+Metro * delFirst(Metro *&pF)
 {
 	if (pF == 0) return 0;
-	List *p = pF;
+	Metro *p = pF;
 	pF = pF->pNext;
 	return p;
 
 }
-bool add(List *&pF, List * pZad, List *p)
+
+bool add(Metro *&pF, Metro * pSet, Metro *p)
 {
-	if (pZad == pF)
+
+	if (pSet == pF)
 	{
 		p->pNext = pF;
 		pF = p;
 		return true;
 	}
 
-	List *pPred = pF;
-	while (pPred->pNext != pZad && pPred->pNext)
-		pPred = pPred->pNext;
-	if (pPred->pNext == 0) return false;
-	p->pNext = pZad;
-	pPred->pNext = p;
+	Metro *pPrev = pF;
+	while (pPrev->pNext != pSet && pPrev->pNext)
+		pPrev = pPrev->pNext;
+	if (pPrev->pNext == 0) return false;
+	p->pNext = pSet;
+	pPrev->pNext = p;
 	return true;
 }
-List * del(List*& pF, List *p)
+
+Metro * del(Metro*& pF, Metro *p)
+{
 	if (pF == 0) return 0;
 	if (pF == p)
 	{
@@ -54,11 +52,11 @@ List * del(List*& pF, List *p)
 	}
 	else
 	{
-		List *pPred = pF;
-		while (pPred->pNext != p && pPred->pNext)
-			pPred = pPred->pNext;
-		if (pPred->pNext == 0) return 0;
-		pPred->pNext = p->pNext;
+		Metro *pPrev = pF;
+		while (pPrev->pNext != p && pPrev->pNext)
+			pPrev = pPrev->pNext;
+		if (pPrev->pNext == 0) return 0;
+		pPrev->pNext = p->pNext;
 		return p;
 	}
 	while (delFirst(pF));
@@ -66,36 +64,48 @@ List * del(List*& pF, List *p)
 
 int main(int argc, char* argv[])
 {
-	List *pF = 0;
-	List *p;
-	char Ch;
+	Metro *pF = 0;
+	Metro *p;
+
+	char Finr;
 	do
 	{
-		p = (List *)malloc(sizeof(List));
-		printf("\nName and sername: ");
-		fflush(stdin); gets_s(p->Person.NameSername, 63);
-		printf("Date of birthday: ");
-		fflush(stdin); gets_s(p->Person.date, 15);
-		printf("Profession: ");
-		fflush(stdin); gets_s(p->Person.prof, 31);
-		printf("\nNumber of Metro line: ");
-		fflush(stdin); scan_f(p->Person.numline)
+		p = (Metro *)malloc(sizeof(Metro));
+		cout << endl;
+		cout << "Number of Metro line: ";
+		fflush(stdin);
+		cin >> p->NumMetLine;
+
+		cout << "Name of Metro line: ";
+		fflush(stdin);
+		gets_s(p->MetroLine, 59);
+
+		cout << "Name of Metro station: ";
+		fflush(stdin);
+		gets_s(p->MetroSt, 59);
+
 		addFirst(pF, p);
-		printf("For continue press Z or z! ");
-		Ch = _getche();
-	} while (Ch == 'Z' || Ch == 'z');
-	for (List *pi = pF; pi; pi = pi->pNext)
-		printf("\n%s %s %s Line number=%d", pi->Person.NameSername, pi->Person.date,
-		pi->Person.pr, pi->Person.numline);
-	for (List *pi = pF; pi->pNext;)
+		printf("For continue press Z else any key! ");
+		Finr = _getche();
+		cin.clear();
+		cout << endl;
+
+	} while (Finr == 'Z' || Finr == 'z');
+	cout << endl;
+	cout << "Unsorted: " << endl;
+	for (Metro *pi = pF; pi; pi = pi->pNext)
+		cout << pi->NumMetLine << " " << pi->MetroLine << " " << pi->MetroSt << endl;
+
+	for (Metro *pi = pF; pi->pNext;)
 	{
-		int min = pi->Person.numline;
-		List *pmin = pi;
-		for (List *pj = pi->pNext; pj; pj = pj->pNext)
-			if (pj->Person.numline<min)
+
+		double min = pi->NumMetLine;
+		Metro *pmin = pi;
+		for (Metro *pj = pi->pNext; pj; pj = pj->pNext)
+			if (pj->NumMetLine<min)
 			{
-			min = pj->Person.numline;
-			pmin = pj;
+				min = pj->NumMetLine;
+				pmin = pj;
 			}
 		if (pi != pmin)
 		{
@@ -104,11 +114,10 @@ int main(int argc, char* argv[])
 		}
 		else pi = pi->pNext;
 	}
-	printf("\nSrting:");
-	for (List *pi = pF; pi; pi = pi->pNext)
-		printf("\n%s %s %s oklad=%.2f", pi->sotr.fio, pi->sotr.date,
-		pi->sotr.dolg, pi->sotr.okl);
-	printf("\nFor exit press any key ");
+
+	cout << endl;
+	cout << "Sorted: " << endl;
+	for (Metro *pi = pF; pi; pi = pi->pNext)
+		cout << pi->NumMetLine << " " << pi->MetroLine << " " << pi->MetroSt << endl;
 	system("pause");
-	return 0;
 }
